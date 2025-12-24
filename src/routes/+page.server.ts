@@ -1,20 +1,25 @@
-import type { PageServerLoad } from './$types';
-import { supabase } from '$lib/supabaseClient';
+import { redirect, fail } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
-type Instrument = {
-	id: number;
-	name: string;
-};
+export const actions: Actions = {
+	default: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const email = formData.get('email') as string;
+		const password = formData.get('password') as string;
 
-export const load: PageServerLoad = async () => {
-	const { data, error } = await supabase.from('instruments').select<'instruments', Instrument>();
+		const { error } = await locals.supabase.auth.signInWithPassword({
+			email,
+			password
+		});
 
-	if (error) {
-		console.error('Error loading instruments:', error.message);
-		return { instruments: [] };
+		if (error) {
+			return fail(400, {
+				error: error.message,
+				email
+			});
+		}
+
+		// Success! Redirect to dashboard or home
+		throw redirect(303, '/dashboard');
 	}
-
-	return {
-		instruments: data ?? []
-	};
 };
