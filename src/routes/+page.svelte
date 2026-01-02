@@ -1,18 +1,28 @@
 <script lang="ts">
 	// src/routes/+page.svelte
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import { Button } from '$lib/components/ui/button';
+	import { BookMarked } from '@lucide/svelte';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
 </script>
 
-<section class="flex flex-col justify-center items-center my-6">
-	<h1 class="text-center text-xl mb-4">Welcome Back</h1>
-	<h2 class="text-base mb-4">Share and discover valuable learning resources</h2>
-	<form method="post" class="w-1/2 border-2 rounded-xl border-black p-6 flex flex-col gap-4">
+<main class="my-6 flex flex-col items-center justify-center">
+	<section class="mb-7 flex flex-col items-center justify-center gap-2">
+		<span class="mb-2 rounded-full bg-black p-4">
+			<BookMarked class="stroke-white" size="32" />
+		</span>
+		<h1 class="text-center text-3xl font-semibold">Welcome Back</h1>
+		<h2 class="text-xl">Share and discover valuable learning resources</h2>
+	</section>
+	<!-- #CBD5E1 -->
+	<form method="post" class="flex w-5/12 flex-col gap-4 rounded-2xl border border-slate-300 p-4">
 		<div class="w-full">
-			<label class="text-base block" for="email"> Email </label>
-			<input
-				class="block border rounded-lg border-black p-2 w-full"
+			<h3 class="py-2.5 text-lg">Log in</h3>
+			<Label class="mb-1.5 block" for="email">Email</Label>
+			<Input
 				type="email"
 				name="email"
 				id="email"
@@ -21,18 +31,15 @@
 			/>
 		</div>
 		<div class="w-full">
-			<label class="block" for="password"> Password </label>
-			<input
-				class="block border rounded-lg border-black p-2 w-full"
-				type="password"
-				name="password"
-				id="password"
-				placeholder="Enter your password"
-			/>
+			<Label class="mb-1.5 block" for="password">Password</Label>
+			<Input type="password" name="password" id="password" placeholder="Enter your password" />
 		</div>
-		<button class="p-2 bg-black text-white rounded-lg cursor-pointer" type="submit">Login</button>
+		<Button class="cursor-pointer rounded-lg bg-black p-2 text-white" type="submit">Login</Button>
 		{#if form?.error}
 			<p class="text-sm text-red-500">{form.error}</p>
 		{/if}
+		<p class="text-center">
+			Don't have an account? <a class="underline underline-offset-3" href="/signup">Sign up</a>
+		</p>
 	</form>
-</section>
+</main>
