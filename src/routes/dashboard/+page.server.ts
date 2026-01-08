@@ -1,34 +1,53 @@
 import type { PageServerLoad } from '../$types';
-import { supabase } from '$lib/supabaseClient';
 import { fail, type Actions } from '@sveltejs/kit';
 
-type Instrument = {
-	id: number;
-	name: string;
-};
+export const load: PageServerLoad = async ({ locals }) => {
+	const resourcesQuery = locals.supabase.from('resources').select(
+		`
+				id,
+				type,
+				title,
+				description,
+				url,
+				created_at,
+				updated_at,
+				author:profiles(first_name, last_name),
+				tags:resource_tags(tag:tags(id, name, slug))
+			`
+	);
 
-export const load: PageServerLoad = async () => {
-	const { data, error } = await supabase.from('instruments').select<'instruments', Instrument>();
+	const { data: resources, error: resourcesError } = await resourcesQuery;
 
-	if (error) {
-		console.error('Error loading instruments:', error.message);
-		return { instruments: [] };
+	if (resourcesError) {
+		console.error('Error loading resources', resourcesError.message);
+		return { resources: [] };
 	}
 
-	return {
-		instruments: data ?? []
-	};
+	const { data: tags, error: tagsError } = await locals.supabase.from('tags').select();
+
+	if (tagsError) {
+		console.error('Error loading resources', tagsError.message);
+		return { tags: [] };
+	}
+
+	return { resources, tags };
 };
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
-		const resourceType = formData.get('resource-select') as string;
-		const title = formData.get('title') as string;
-		const description = formData.get('description') as string;
+		// const resourceType = formData.get('resource-select') as Resource['type'];
+		// const title = formData.get('title') as Resource['title'];
+		// const description = formData.get('description') as Resource['description'];
+		// const tags = formData.get('tags') as string;
+		// const codeSnippet = formData.get('code-snippet') as Resource['code_snippet'];
+		// const url = formData.get('url') as Resource['url'];
+		const resourceType = formData.get('resource-select');
+		const title = formData.get('title');
+		const description = formData.get('description');
 		const tags = formData.get('tags') as string;
-		const codeSnippet = formData.get('code-snippet') as string;
-		const url = formData.get('url') as string;
+		const codeSnippet = formData.get('code-snippet');
+		const url = formData.get('url');
 
 		console.log({ resourceType, title, description, tags, codeSnippet, url });
 
@@ -36,13 +55,25 @@ export const actions: Actions = {
 			data: { user }
 		} = await locals.supabase.auth.getUser();
 
+		// const compiledInsert = {
+		// 	type: resourceType,
+		// 	title,
+		// 	description,
+		// 	author_id: user?.id ?? '',
+		// 	url,
+		// 	code_snippet: codeSnippet
+		// };
+
 		const compiledInsert = {
-			type: resourceType,
-			title,
-			description,
-			author_id: user?.id,
-			url,
-			code_snippet: codeSnippet
+			type:
+				typeof resourceType === 'string'
+					? (resourceType as 'code_snippet' | 'article' | 'learning_resource')
+					: 'article', // or your default type
+			title: typeof title === 'string' ? title : '',
+			description: typeof description === 'string' ? description : '',
+			author_id: user?.id ?? '',
+			url: typeof url === 'string' ? url : '',
+			code_snippet: typeof codeSnippet === 'string' ? codeSnippet : null
 		};
 
 		const { data: resource, error } = await locals.supabase
@@ -79,7 +110,7 @@ export const actions: Actions = {
 				existingTag = newTag;
 			}
 
-			tagIds.push(existingTag.id);
+			tagIds.push(existingTag?.id);
 		}
 
 		// // Link tags to resource

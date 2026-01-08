@@ -1,6 +1,5 @@
 <script lang="ts">
 	// profile/+page.svelte
-	import { supabase } from '$lib/supabaseClient';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import Button from '$lib/components/Button.svelte';

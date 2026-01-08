@@ -162,7 +162,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_resources_by_tags:
+        | {
+            Args: { tag_ids: number[] }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.get_resources_by_tags(tag_ids => _int4), public.get_resources_by_tags(tag_ids => _int8). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
+          }
+        | {
+            Args: { tag_ids: number[] }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.get_resources_by_tags(tag_ids => _int4), public.get_resources_by_tags(tag_ids => _int8). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
+          }
+      get_resources_by_tagz: {
+        Args: { tag_ids: number[] }
+        Returns: {
+          author: Json
+          created_at: string
+          description: string
+          id: number
+          tags: Json
+          title: string
+          type: string
+          updated_at: string
+          url: string
+        }[]
+      }
     }
     Enums: {
       resource_type: "article" | "code_snippet" | "learning_resource"

@@ -7,6 +7,8 @@
 	let { children, data } = $props();
 
 	const user = $derived(data.session?.user);
+
+	// console.log({ data });
 </script>
 
 <svelte:head>
