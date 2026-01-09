@@ -7,7 +7,6 @@
 
 	let { data }: { data: PageData } = $props();
 	let resources = $state(data.resources ?? []);
-	// const user = $derived(data.session?.user);
 
 	const updateResources = (newResources: typeof resources) => (resources = newResources);
 </script>

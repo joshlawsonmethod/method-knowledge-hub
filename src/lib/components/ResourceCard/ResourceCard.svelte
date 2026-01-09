@@ -4,32 +4,19 @@
 	import CardType from '$lib/components/ResourceCard/CardType.svelte';
 	import Time from 'svelte-time/Time.svelte';
 	import { CircleUser, ExternalLink, Tag, User } from '@lucide/svelte';
-
-	type Resource = {
-		id: number;
-		type: 'article' | 'code_snippet' | 'learning_resource';
-		title: string;
-		description: string;
-		url: string | null;
-		created_at: string;
-		updated_at: string | null;
-		author: {
-			first_name: string | null;
-			last_name: string | null;
-		};
-		tags: {
-			tag: {
-				id: number;
-				name: string;
-				slug: string;
-			} | null;
-		}[];
-	};
+	import { drawer } from '$lib/components/Drawer/drawerState.svelte';
+	import type { Resource } from '$lib/supabase/resource.types';
 
 	let { resource }: { resource: Resource } = $props();
 </script>
 
-<Card.Root class="flex flex-col justify-between gap-2.5">
+<Card.Root
+	class="flex cursor-pointer flex-col justify-between gap-2.5"
+	onclick={() => {
+		drawer.isOpen = true;
+		drawer.resource = resource;
+	}}
+>
 	<Card.Header class="flex flex-1 flex-col">
 		<CardType type={resource.type} />
 		<Card.Title class="text-lg">{resource.title}</Card.Title>

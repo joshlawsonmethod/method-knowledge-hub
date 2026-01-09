@@ -8,6 +8,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 				type,
 				title,
 				description,
+				code_snippet,
 				url,
 				created_at,
 				updated_at,

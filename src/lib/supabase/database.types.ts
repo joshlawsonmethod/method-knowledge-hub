@@ -163,9 +163,13 @@ export type Database = {
     }
     Functions: {
       get_resources: {
-        Args: { resource_types?: string[]; tag_ids?: number[] }
+        Args: {
+          resource_types?: Database["public"]["Enums"]["resource_type"][]
+          tag_ids?: number[]
+        }
         Returns: {
           author: Json
+          code_snippet: string
           created_at: string
           description: string
           id: number
