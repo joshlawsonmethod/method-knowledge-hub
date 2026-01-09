@@ -16,10 +16,10 @@ export const actions: Actions = {
 			});
 		}
 
-		const updates: { email: string; password: string; data: { display_name: string } } = {
+		const updates = {
 			email,
 			password,
-			data: { display_name: `${firstName} ${lastName}` }
+			options: { data: { display_name: `${firstName} ${lastName}` } }
 		};
 
 		const { error } = await locals.supabase.auth.signUp(updates);
