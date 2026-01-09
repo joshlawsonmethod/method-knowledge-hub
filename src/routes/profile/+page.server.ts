@@ -1,6 +1,5 @@
 import { fail } from '@sveltejs/kit';
 import { supabase } from '$lib/supabaseClient';
-// const { data }: { data: PageData } = $props();
 import type { Actions } from './$types';
 
 const {
@@ -21,10 +20,7 @@ export const actions: Actions = {
 		if (email && email.toLowerCase() !== user?.email?.toLowerCase()) updates.email = email;
 		if (password) updates.password = password;
 
-		console.log({ updates });
-
 		const { error } = await locals.supabase.auth.updateUser(updates);
-		console.log('good job!');
 
 		if (error) {
 			return fail(400, {

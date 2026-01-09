@@ -162,21 +162,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_resources_by_tags:
-        | {
-            Args: { tag_ids: number[] }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.get_resources_by_tags(tag_ids => _int4), public.get_resources_by_tags(tag_ids => _int8). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
-          }
-        | {
-            Args: { tag_ids: number[] }
-            Returns: {
-              error: true
-            } & "Could not choose the best candidate function between: public.get_resources_by_tags(tag_ids => _int4), public.get_resources_by_tags(tag_ids => _int8). Try renaming the parameters or the function itself in the database so function overloading can be resolved"[]
-          }
-      get_resources_by_tagz: {
-        Args: { tag_ids: number[] }
+      get_resources: {
+        Args: { resource_types?: string[]; tag_ids?: number[] }
         Returns: {
           author: Json
           created_at: string
@@ -184,7 +171,21 @@ export type Database = {
           id: number
           tags: Json
           title: string
-          type: string
+          type: Database["public"]["Enums"]["resource_type"]
+          updated_at: string
+          url: string
+        }[]
+      }
+      get_resources_by_tags: {
+        Args: { tag_ids?: number[] }
+        Returns: {
+          author: Json
+          created_at: string
+          description: string
+          id: number
+          tags: Json
+          title: string
+          type: Database["public"]["Enums"]["resource_type"]
           updated_at: string
           url: string
         }[]

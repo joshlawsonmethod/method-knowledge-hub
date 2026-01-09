@@ -1,4 +1,9 @@
-create or replace function get_resources_by_tags(tag_ids int [] default null) returns table (
+drop function if exists get_resources_by_tags;
+-- Optional: clean up the old function name if you want
+create or replace function get_resources(
+        tag_ids int [] default null,
+        resource_types text [] default null -- New parameter for types
+    ) returns table (
         id bigint,
         type public.resource_type,
         title text,
@@ -44,15 +49,25 @@ from resources r
     join profiles p on p.id = r.author_id
     left join resource_tags rt on rt.resource_id = r.id
     left join tags t on t.id = rt.tag_id
-where (
-        tag_ids is null
-        or cardinality(tag_ids) = 0
-    )
-    or exists (
-        select 1
-        from resource_tags rt2
-        where rt2.resource_id = r.id
-            and rt2.tag_id = any(tag_ids)
+where -- 1. FILTER BY TAGS
+    (
+        (
+            tag_ids is null
+            or cardinality(tag_ids) = 0
+        )
+        or exists (
+            select 1
+            from resource_tags rt2
+            where rt2.resource_id = r.id
+                and rt2.tag_id = any(tag_ids)
+        )
+    ) -- 2. FILTER BY TYPE (The new logic)
+    and (
+        (
+            resource_types is null
+            or cardinality(resource_types) = 0
+        )
+        or r.type::text = any(resource_types) -- Cast enum to text for comparison
     )
 group by r.id,
     p.first_name,

@@ -6,37 +6,33 @@
 	import { supabase } from '$lib/supabaseClient';
 
 	type Tag = Database['public']['Tables']['tags']['Row'];
-	// type Resource = Database['public']['Tables']['resources']['Row'];
 
 	let { tags, onResourcesUpdate } = $props();
 
 	let checkedBoxes: string[] = $state([]);
 	let activeBadges: Tag[] = $state([]);
 
-	const handleCheckChange = (value: string, boxState: boolean) =>
-		boxState
-			? (checkedBoxes = [...checkedBoxes, value])
-			: (checkedBoxes = checkedBoxes.filter((box) => box !== value));
-
-	let requestId = 0;
-
-	const fetchResources = async (badges: Tag[]) => {
-		const id = ++requestId;
+	const fetchResources = async (badges: Tag[], types: string[]) => {
 		const tagIds = badges.map((b) => b.id);
 
-		console.log('RPC return', tagIds);
-
-		const { data, error } = await supabase.rpc('get_resources_by_tags', {
-			tag_ids: tagIds
+		const { data, error } = await supabase.rpc('get_resources', {
+			tag_ids: tagIds,
+			resource_types: checkedBoxes
 		});
 
 		if (error) {
 			throw Error(error.message);
 		}
 
-		if (id !== requestId) return;
-
 		onResourcesUpdate(data ?? []);
+	};
+
+	const handleCheckChange = (value: string, boxState: boolean) => {
+		boxState
+			? (checkedBoxes = [...checkedBoxes, value])
+			: (checkedBoxes = checkedBoxes.filter((box) => box !== value));
+
+		fetchResources(activeBadges, checkedBoxes);
 	};
 
 	const handleBadge = async (tag: Tag) => {
@@ -45,12 +41,7 @@
 			: [...activeBadges, tag];
 
 		activeBadges = nextBadges;
-
-		console.log(
-			'Active badges:',
-			nextBadges.map((b) => b.id)
-		);
-		fetchResources(nextBadges);
+		fetchResources(nextBadges, checkedBoxes);
 	};
 </script>
 
@@ -81,18 +72,18 @@
 				<Field.Field class="gap-2" orientation="horizontal">
 					<Checkbox
 						class="h-3.5 w-3.5 border-border"
-						id="learning_resources"
-						checked={checkedBoxes.includes('learning_resources')}
-						onCheckedChange={(boxState) => handleCheckChange('learning_resources', boxState)}
+						id="learning_resource"
+						checked={checkedBoxes.includes('learning_resource')}
+						onCheckedChange={(boxState) => handleCheckChange('learning_resource', boxState)}
 					/>
-					<Field.Label for="learning_resources" class="font-normal">Learning Resources</Field.Label>
+					<Field.Label for="learning_resource" class="font-normal">Learning Resources</Field.Label>
 				</Field.Field>
 			</Field.Group>
 		</Field.Set>
 	</Field.Group>
 	<section class="w-full">
-		<h3>Tags</h3>
-		<div>
+		<h3 class="mb-2.5">Tags</h3>
+		<div class="flex flex-wrap gap-2.5">
 			{#each tags as tag}
 				<button
 					class={badgeVariants({

@@ -36,12 +36,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
-		// const resourceType = formData.get('resource-select') as Resource['type'];
-		// const title = formData.get('title') as Resource['title'];
-		// const description = formData.get('description') as Resource['description'];
-		// const tags = formData.get('tags') as string;
-		// const codeSnippet = formData.get('code-snippet') as Resource['code_snippet'];
-		// const url = formData.get('url') as Resource['url'];
 		const resourceType = formData.get('resource-select');
 		const title = formData.get('title');
 		const description = formData.get('description');
@@ -49,20 +43,9 @@ export const actions: Actions = {
 		const codeSnippet = formData.get('code-snippet');
 		const url = formData.get('url');
 
-		console.log({ resourceType, title, description, tags, codeSnippet, url });
-
 		const {
 			data: { user }
 		} = await locals.supabase.auth.getUser();
-
-		// const compiledInsert = {
-		// 	type: resourceType,
-		// 	title,
-		// 	description,
-		// 	author_id: user?.id ?? '',
-		// 	url,
-		// 	code_snippet: codeSnippet
-		// };
 
 		const compiledInsert = {
 			type:

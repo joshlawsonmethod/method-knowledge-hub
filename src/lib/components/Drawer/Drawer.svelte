@@ -18,8 +18,6 @@
 
 	let resource = $state('');
 
-	// $effect(() => console.log({ resource }));
-
 	const triggerContent = $derived(
 		resources.find((r) => r.id === resource)?.name ?? 'Select Resource'
 	);

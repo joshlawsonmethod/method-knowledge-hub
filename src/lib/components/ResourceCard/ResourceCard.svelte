@@ -27,8 +27,6 @@
 	};
 
 	let { resource }: { resource: Resource } = $props();
-
-	$effect(() => console.log('ResourceCard render', resource.id));
 </script>
 
 <Card.Root class="flex flex-col justify-between gap-2.5">
@@ -57,5 +55,3 @@
 		<Time relative timestamp={resource.created_at} />
 	</Card.Footer>
 </Card.Root>
-
-<!-- {@html `<pre>${JSON.stringify(resource.tags.map((t) => t.tag.name))}</pre>`} -->
