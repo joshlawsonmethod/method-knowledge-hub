@@ -17,6 +17,7 @@
 		<h1 class="text-center text-3xl font-semibold">Welcome Back</h1>
 		<h2 class="text-xl">Share and discover valuable learning resources</h2>
 	</section>
+	<h3>Hi friend!</h3>
 	<!-- #CBD5E1 -->
 	<form method="post" class="flex w-5/12 flex-col gap-4 rounded-2xl border border-slate-300 p-4">
 		<div class="w-full">
