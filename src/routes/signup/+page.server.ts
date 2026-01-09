@@ -19,7 +19,13 @@ export const actions: Actions = {
 		const updates = {
 			email,
 			password,
-			options: { data: { display_name: `${firstName} ${lastName}` } }
+			options: {
+				data: {
+					display_name: `${firstName} ${lastName}`,
+					first_name: firstName,
+					last_name: lastName
+				}
+			}
 		};
 
 		const { error } = await locals.supabase.auth.signUp(updates);
