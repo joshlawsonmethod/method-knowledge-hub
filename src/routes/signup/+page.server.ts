@@ -6,11 +6,23 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
+		const firstName = formData.get('firstName') as string;
+		const lastName = formData.get('lastName') as string;
 
-		const { error } = await locals.supabase.auth.signUp({
+		if (!email || !password || !firstName || !lastName) {
+			return fail(400, {
+				error: 'All fields are required.',
+				email
+			});
+		}
+
+		const updates: { email: string; password: string; data: { display_name: string } } = {
 			email,
-			password
-		});
+			password,
+			data: { display_name: `${firstName} ${lastName}` }
+		};
+
+		const { error } = await locals.supabase.auth.signUp(updates);
 
 		if (error) {
 			return fail(400, {
