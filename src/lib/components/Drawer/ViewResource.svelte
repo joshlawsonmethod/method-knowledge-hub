@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Resource } from '$lib/supabase/resource.types';
 	import { Badge } from '$lib/components/ui/badge';
-	import { Button } from '$lib/components/ui/button';
 	import { ExternalLink } from '@lucide/svelte';
 	import { codeToHtml } from 'shiki';
 

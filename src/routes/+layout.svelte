@@ -7,6 +7,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>Method Knowledge Hub | Login</title>
 </svelte:head>
 
 {@render children()}

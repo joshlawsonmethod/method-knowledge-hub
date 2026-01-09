@@ -18,6 +18,10 @@
 	const user = $derived(data.session?.user);
 </script>
 
+<svelte:head>
+	<title>Method Knowledge Hub | Profile</title>
+</svelte:head>
+
 <main class="my-6 flex flex-col items-center justify-center">
 	<section class="mb-7 flex flex-col items-center justify-center gap-2">
 		<h1 class="text-center text-3xl font-semibold">Your Profile</h1>
