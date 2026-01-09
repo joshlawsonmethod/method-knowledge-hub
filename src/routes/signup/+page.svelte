@@ -25,10 +25,7 @@
 
 <main class="m-6 h-full w-full">
 	<h1 class="mb-4 text-xl">Sign up for Method Knowledge Hub</h1>
-	<form
-		on:submit={signUpNewUser}
-		class="flex w-1/2 flex-col gap-4 rounded-xl border-2 border-black p-6"
-	>
+	<form method="POST" class="flex w-1/2 flex-col gap-4 rounded-xl border-2 border-black p-6">
 		<div class="w-full">
 			<Label class="block text-base" for="firstName">First Name</Label>
 			<Input type="text" name="firstName" id="firstName" bind:value={firstName} />

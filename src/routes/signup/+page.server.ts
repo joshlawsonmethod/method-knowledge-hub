@@ -7,7 +7,7 @@ export const actions: Actions = {
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
-		const { error } = await locals.supabase.auth.signInWithPassword({
+		const { error } = await locals.supabase.auth.signUp({
 			email,
 			password
 		});
