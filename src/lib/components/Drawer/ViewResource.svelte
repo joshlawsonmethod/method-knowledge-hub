@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { Resource } from '$lib/supabase/resource.types';
 	import { Badge } from '$lib/components/ui/badge';
+	import { Button } from '$lib/components/ui/button';
 	import { ExternalLink } from '@lucide/svelte';
 	import { codeToHtml } from 'shiki';
+	import CardType from '../ResourceCard/CardType.svelte';
 
 	let { resource }: { resource: Resource } = $props();
 	let output = $state('');
@@ -21,7 +23,8 @@
 	});
 </script>
 
-<article class="flex h-full w-full max-w-[500px] flex-col gap-4">
+<article class="flex h-full w-full flex-col gap-4">
+	<CardType type={resource.type} />
 	<h2 class="text-lg font-semibold">{resource.title}</h2>
 	<p>{resource.description}</p>
 	<ul class="flex flex-row flex-wrap gap-2.5">
@@ -40,7 +43,7 @@
 				{@html output}
 			</div>
 		</div>
-		<!-- <Button>Copy Code Snippet</Button> -->
+		<Button>Copy Code Snippet</Button>
 	{/if}
 	<!-- {#if resource.type === "learning_resource"}
         <div></div>

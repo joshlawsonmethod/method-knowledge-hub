@@ -20,7 +20,7 @@
 	);
 </script>
 
-<form method="POST" class="flex h-full w-full flex-col gap-4">
+<form method="POST" action="?/new-resource" class="flex h-full w-full flex-col gap-4">
 	<h1 class="text-lg font-semibold">Share a resource</h1>
 	<p>Contribute to the knowledge base by sharing valuable content</p>
 	<Field.Set class="h-full">

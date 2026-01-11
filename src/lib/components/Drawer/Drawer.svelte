@@ -21,7 +21,7 @@
 
 {#if drawer.isOpen}
 	<aside
-		class={cn('absolute right-0 h-[87svh]', condensedWrapperClass)}
+		class={cn('drawer absolute right-0 h-[87svh] w-lg', condensedWrapperClass)}
 		transition:fly={{ x: 200, duration: 300 }}
 	>
 		<Button

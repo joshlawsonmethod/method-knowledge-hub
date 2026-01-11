@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	'new-resource': async ({ request, locals }) => {
 		const formData = await request.formData();
 		const resourceType = formData.get('resource-select');
 		const title = formData.get('title');
@@ -106,5 +106,22 @@ export const actions: Actions = {
 
 			await locals.supabase.from('resource_tags').insert(tagLinks);
 		}
+	},
+	edit: async () => {
+		console.log('triggered edit!');
+		// locals.supabase.from('resources').update()
+	},
+	delete: async ({ locals, request }) => {
+		const formData = await request.formData();
+		const id = Number(formData.get('id'));
+
+		const { error } = await locals.supabase.from('resources').delete().eq('id', id);
+
+		if (error) {
+			console.error('Delete error: ', error);
+			return fail(500, { error: 'Failed to delete resource' });
+		}
+
+		return { success: true };
 	}
 };
