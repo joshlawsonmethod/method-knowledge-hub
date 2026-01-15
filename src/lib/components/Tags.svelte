@@ -4,24 +4,29 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { XIcon } from '@lucide/svelte';
+	import type { Resource } from '$lib/supabase/schema.types';
 
-	let tags = $state<string[]>([]);
+	let { tags = $bindable() }: { tags?: Resource['tags'] } = $props();
+
+	// we really only need the slug or the name
+	// svelte-ignore state_referenced_locally
+	let values = $state(tags?.map(({ tag }) => tag.slug) ?? []);
 	let draft = $state('');
 
 	const addTag = () => {
 		const value = draft.trim();
 		if (!value) return;
 
-		const exists = tags.some((t) => t.toLowerCase() === value.toLowerCase());
+		const exists = values.some((tag) => tag.toLowerCase() === value.toLowerCase());
 		if (exists) {
 			draft = '';
 			return;
 		}
-		tags = [...tags, value];
+		values = [...values, value];
 		draft = '';
 	};
 
-	const removeTag = (tag: string) => (tags = tags.filter((t) => t !== tag));
+	const removeValue = (value: string) => (values = values.filter((t) => t !== value));
 
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (e.key === 'Enter') {
@@ -29,14 +34,14 @@
 			addTag();
 		}
 		// Optional: backspace to remove last tag when input empty
-		if (e.key === 'Backspace' && draft.length === 0 && tags.length > 0) {
-			removeTag(tags[tags.length - 1]);
+		if (e.key === 'Backspace' && draft.length === 0 && values.length > 0) {
+			removeValue(values[values.length - 1]);
 		}
 	};
 
 	const tagsCSV = $derived(
-		tags
-			.map((tag) => tag.trim())
+		values
+			.map((value) => value.trim())
 			.filter(Boolean)
 			.join(',')
 	);
@@ -47,9 +52,9 @@
 		<Field.Label for="tags">Tags</Field.Label>
 		<div class="flex gap-2">
 			<InputGroup.Root>
-				{#if tags.length > 0}
+				{#if values.length > 0}
 					<InputGroup.Addon class="flex gap-1 ps-2">
-						{#each tags as tag}
+						{#each values as tag}
 							<!-- <div class="h-5 p-2 left-0 top-0 absolute bg-black rounded-[50px] outline outline-1 outline-offset-[-1px] outline-black/20 inline-flex justify-center items-center gap-2.5"> -->
 
 							<Badge
@@ -61,7 +66,7 @@
 									type="button"
 									class="inline-flex items-center justify-center rounded-full p-0.5 hover:bg-muted"
 									aria-label="Remove tag"
-									onclick={() => removeTag(tag)}
+									onclick={() => removeValue(tag)}
 								>
 									<XIcon class="size-3" />
 								</button>
@@ -73,7 +78,7 @@
 				<InputGroup.Input
 					id="tag-display"
 					data-slot="input-group-control"
-					placeholder={tags.length === 0 ? 'Add tags' : ''}
+					placeholder={values?.length === 0 ? 'Add tags' : ''}
 					bind:value={draft}
 					onkeydown={handleKeydown}
 					class="min-w-24"

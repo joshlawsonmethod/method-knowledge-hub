@@ -169,6 +169,7 @@ export type Database = {
         }
         Returns: {
           author: Json
+          author_id: string
           code_snippet: string
           created_at: string
           description: string

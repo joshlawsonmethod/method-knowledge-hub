@@ -1,15 +1,14 @@
 <script lang="ts">
 	import * as Field from './ui/field';
 	import { Checkbox } from './ui/checkbox';
-	import type { Database } from '$lib/supabase/database.types';
 	import { badgeVariants } from '$lib/components/ui/badge/index.js';
 	import { supabase } from '$lib/supabaseClient';
-
-	type Tag = Database['public']['Tables']['tags']['Row'];
+	import { cn } from '$lib/utils';
+	import type { ResourceType, Tag } from '$lib/supabase/schema.types';
 
 	let { tags, onResourcesUpdate } = $props();
 
-	let checkedBoxes: string[] = $state([]);
+	let checkedBoxes: ResourceType[] = $state([]);
 	let activeBadges: Tag[] = $state([]);
 
 	const fetchResources = async (badges: Tag[], types: string[]) => {
@@ -27,7 +26,7 @@
 		onResourcesUpdate(data ?? []);
 	};
 
-	const handleCheckChange = (value: string, boxState: boolean) => {
+	const handleCheckChange = (value: ResourceType, boxState: boolean) => {
 		boxState
 			? (checkedBoxes = [...checkedBoxes, value])
 			: (checkedBoxes = checkedBoxes.filter((box) => box !== value));
@@ -86,9 +85,12 @@
 		<div class="flex flex-wrap gap-2.5">
 			{#each tags as tag}
 				<button
-					class={badgeVariants({
-						variant: activeBadges.some((badge) => badge.id === tag.id) ? 'default' : 'secondary'
-					})}
+					class={cn(
+						badgeVariants({
+							variant: activeBadges.some((badge) => badge.id === tag.id) ? 'outline' : 'secondary'
+						}),
+						'cursor-pointer'
+					)}
 					onclick={() => handleBadge(tag)}>{tag.name}</button
 				>
 			{/each}

@@ -7,6 +7,7 @@
 
 	let { data }: { data: PageData } = $props();
 	let resources = $state(data.resources ?? []);
+	const currentUserId = $derived(data.session?.user.id ?? '');
 
 	const updateResources = (newResources: typeof resources) => (resources = newResources);
 </script>
@@ -30,10 +31,10 @@
 <section class="flex w-full gap-8">
 	<Sidebar tags={data.tags ?? []} onResourcesUpdate={updateResources} />
 	<section class="w-full" id="cards">
-		<h2>{resources?.length} Resources found</h2>
+		<h3 class="pb-4 text-xl">{resources?.length} Resources found</h3>
 		<article class="grid grid-cols-2 gap-4">
 			{#each resources as resource (resource.id)}
-				<ResourceCard {resource} />
+				<ResourceCard {resource} {currentUserId} />
 			{/each}
 		</article>
 	</section>

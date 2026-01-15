@@ -1,23 +1,21 @@
 import type { PageServerLoad } from '../$types';
 import { fail, type Actions } from '@sveltejs/kit';
+import type { Resource, ResourceType } from '$lib/supabase/schema.types';
+import updateTags from '$lib/helpers/updateTags';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	const resourcesQuery = locals.supabase.from('resources').select(
-		`
-				id,
-				type,
-				title,
-				description,
-				code_snippet,
-				url,
-				created_at,
-				updated_at,
-				author:profiles(first_name, last_name),
-				tags:resource_tags(tag:tags(id, name, slug))
-			`
-	);
+	const resourcesQuery = locals.supabase.rpc('get_resources', {
+		tag_ids: undefined,
+		resource_types: undefined
+	});
 
-	const { data: resources, error: resourcesError } = await resourcesQuery;
+	const { data, error: resourcesError } = await resourcesQuery;
+
+	const resources: Resource[] = (data ?? []).map((r) => ({
+		...r,
+		author: r.author as { first_name: string | null; last_name: string | null } | null,
+		tags: Array.isArray(r.tags) ? r.tags : []
+	})) as unknown as Resource[];
 
 	if (resourcesError) {
 		console.error('Error loading resources', resourcesError.message);
@@ -68,48 +66,58 @@ export const actions: Actions = {
 
 		if (error) return fail(500, { error: 'Failed to create resource' });
 
-		// Process tags
-		const tagsArray = tags
-			.split(',')
-			.map((tag) => ({ id: tag.toLowerCase().replace(/[^a-z0-9]/g, ''), name: tag }));
-		const tagIds = [];
-		for (const tag of tagsArray) {
-			if (!tag.id) continue;
-
-			// Try to find existing tag
-			let { data: existingTag } = await locals.supabase
-				.from('tags')
-				.select('id')
-				.eq('slug', tag.id)
-				.single();
-
-			// Create if doesn't exist
-			if (!existingTag) {
-				const { data: newTag } = await locals.supabase
-					.from('tags')
-					.insert({ name: tag.name, slug: tag.id })
-					.select('id')
-					.single();
-
-				existingTag = newTag;
-			}
-
-			tagIds.push(existingTag?.id);
-		}
-
-		// // Link tags to resource
-		if (tagIds.length > 0) {
-			const tagLinks = tagIds.map((tagId) => ({
-				resource_id: resource.id,
-				tag_id: tagId
-			}));
-
-			await locals.supabase.from('resource_tags').insert(tagLinks);
+		try {
+			await updateTags(locals.supabase, resource.id, tags);
+		} catch (e) {
+			console.error(e);
+			return fail(500, { error: 'Resource created, but tags failed to save.' });
 		}
 	},
-	edit: async () => {
-		console.log('triggered edit!');
-		// locals.supabase.from('resources').update()
+	'edit-resource': async ({ locals, request }) => {
+		const formData = await request.formData();
+		const id = formData.get('editing-id') as unknown as number;
+
+		// 1. Validate User (optional because of RLS but extra-safe!)
+		const {
+			data: { user }
+		} = await locals.supabase.auth.getUser();
+		if (!user) return fail(401, { error: 'Unauthorized' });
+
+		// 2. Prepare Data
+		const title = formData.get('title') as string;
+		const description = formData.get('description') as string;
+		const resourceType = formData.get('resource-select') as ResourceType;
+		const url = formData.get('url') as string;
+		const codeSnippet = formData.get('code-snippet') as string;
+
+		// 3. Update Resource
+		const { error: updateError } = await locals.supabase
+			.from('resources')
+			.update({
+				title,
+				description,
+				type: resourceType,
+				url: resourceType === 'article' ? url : null,
+				code_snippet: resourceType === 'code_snippet' ? codeSnippet : null,
+				updated_at: new Date().toISOString()
+			})
+			.eq('id', id)
+			.eq('author_id', user.id);
+
+		if (updateError) {
+			return fail(500, { error: 'Failed to update resource' });
+		}
+
+		// 4. Handle Tags (Optional Step)
+		const tags = formData.get('tags') as string;
+		try {
+			await updateTags(locals.supabase, id, tags);
+		} catch (e) {
+			console.error(e);
+			return fail(500, { error: 'Resource updated, but tags failed to save.' });
+		}
+
+		return { success: true };
 	},
 	delete: async ({ locals, request }) => {
 		const formData = await request.formData();

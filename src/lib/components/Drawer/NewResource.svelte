@@ -7,16 +7,16 @@
 	import Tags from '$lib/components/Tags.svelte';
 	import { drawer } from '$lib/components/Drawer/drawerState.svelte';
 
-	let { resource } = $props();
+	let resourceType = $state('');
 
-	let resources = $state([
+	let resources = [
 		{ name: 'Article', id: 'article' },
 		{ name: 'Code Snippet', id: 'code_snippet' },
 		{ name: 'Learning Resource', id: 'learning_resource' }
-	]);
+	];
 
 	const triggerContent = $derived(
-		resources.find((r) => r.id === resource)?.name ?? 'Select Resource'
+		resources.find((r) => r.id === resourceType)?.name ?? 'Select Resource'
 	);
 </script>
 
@@ -27,7 +27,7 @@
 		<Field.Group class="h-full justify-between">
 			<div class="flex flex-col gap-4">
 				<Field.Field class="w-full">
-					<Select.Root type="single" bind:value={resource} name="resource-select">
+					<Select.Root type="single" bind:value={resourceType} name="resource-select">
 						<Select.Trigger class="" id="resource-select">
 							<span>{triggerContent}</span>
 						</Select.Trigger>
@@ -51,17 +51,19 @@
 						placeholder="Enter a detailed description"
 					/>
 				</Field.Field>
-				<Tags />
-				<Field.Field class={resource === 'code_snippet' ? 'block' : 'hidden'}>
+				<Tags tags={[]} />
+				<!-- <Field.Field class={resource.type === 'code_snippet' ? 'block' : 'hidden'}> -->
+				<Field.Field class={resourceType === 'code_snippet' ? 'block' : 'hidden'}>
 					<Field.Label for="code-snippet">Code Snippet</Field.Label>
 					<Textarea
 						class=""
 						id="code-snippet"
 						name="code-snippet"
-						placeholder="Enter a detailed description"
+						placeholder="Enter a code snippet"
 					/>
 				</Field.Field>
-				<Field.Field class={resource === 'code_snippet' ? 'hidden' : 'block'}>
+				<!-- <Field.Field class={resource.type === 'code_snippet' ? 'hidden' : 'block'}> -->
+				<Field.Field class={resourceType === 'code_snippet' ? 'hidden' : 'block'}>
 					<Field.Label for="url">Article Url</Field.Label>
 					<Input class="" id="url" name="url" placeholder="example.com/article" />
 				</Field.Field>
