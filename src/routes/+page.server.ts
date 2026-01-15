@@ -1,5 +1,15 @@
 import { redirect, fail } from '@sveltejs/kit';
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ locals }) => {
+	const {
+		data: { user }
+	} = await locals.supabase.auth.getUser();
+
+	if (user) {
+		redirect(303, '/dashboard');
+	}
+};
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {

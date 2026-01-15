@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { BookMarked, CircleUser } from '@lucide/svelte';
+	import { Bookmark, BookMarked, CircleUser, LogOut } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import Drawer from '$lib/components/Drawer/Drawer.svelte';
 	import { drawer } from '$lib/components/Drawer/drawerState.svelte';
 
@@ -25,12 +26,35 @@
 	<section class="flex items-center gap-4">
 		<Button
 			class="cursor-pointer rounded-lg bg-slate-900 p-2 px-10 pt-2 text-center text-white"
-			onclick={() => (drawer.isOpen = true)}>Share Resource</Button
+			onclick={() => (drawer.isOpen = true)}
 		>
-		<a class="flex items-center gap-1.5" href="/profile">
-			<CircleUser class="" size="36" />
-			<span>{user?.user_metadata.display_name}</span>
-		</a>
+			Share Resource
+		</Button>
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger class="flex cursor-pointer items-center gap-1.5">
+				<CircleUser class="" size="36" />
+				<span>{user?.user_metadata.display_name}</span>
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content>
+				<DropdownMenu.Group>
+					<DropdownMenu.Label><a href="/profile">My Account</a></DropdownMenu.Label>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item>
+						<a href="##" class="flex items-center gap-2">
+							<Bookmark strokeWidth={2} color="black" />Your Shared Resources</a
+						>
+					</DropdownMenu.Item>
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item>
+						<form method="POST" action="/logout">
+							<button class="flex items-center gap-2" type="button">
+								<LogOut strokeWidth={2} color="black" /> Logout
+							</button>
+						</form>
+					</DropdownMenu.Item>
+				</DropdownMenu.Group>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 	</section>
 </header>
 <main class="relative mx-14">

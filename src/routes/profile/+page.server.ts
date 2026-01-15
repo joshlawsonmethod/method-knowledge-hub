@@ -1,10 +1,16 @@
-import { fail } from '@sveltejs/kit';
-import { supabase } from '$lib/supabaseClient';
+import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import type { PageServerLoad } from '../$types';
 
-const {
-	data: { user }
-} = await supabase.auth.getUser();
+export const load: PageServerLoad = async ({ locals }) => {
+	const {
+		data: { user }
+	} = await locals.supabase.auth.getUser();
+
+	if (user) {
+		redirect(303, '/');
+	}
+};
 
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
@@ -15,9 +21,13 @@ export const actions: Actions = {
 		const lastName = formData.get('lastName') as string;
 
 		const updates: { email?: string; password?: string; data?: { display_name: string } } = {};
-		if (firstName && lastName && `${firstName} ${lastName}` !== user?.user_metadata.display_name)
+		if (
+			firstName &&
+			lastName &&
+			`${firstName} ${lastName}` !== locals.user?.user_metadata.display_name
+		)
 			updates.data = { display_name: `${firstName} ${lastName}` };
-		if (email && email.toLowerCase() !== user?.email?.toLowerCase()) updates.email = email;
+		if (email && email.toLowerCase() !== locals.user?.email?.toLowerCase()) updates.email = email;
 		if (password) updates.password = password;
 
 		const { error } = await locals.supabase.auth.updateUser(updates);

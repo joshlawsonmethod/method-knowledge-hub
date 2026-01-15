@@ -2,11 +2,23 @@ import type { PageServerLoad } from '../$types';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { Resource, ResourceType } from '$lib/supabase/schema.types';
 import updateTags from '$lib/helpers/updateTags';
+import { redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
+	const {
+		data: { user }
+	} = await locals.supabase.auth.getUser();
+
+	if (user) {
+		redirect(303, '/');
+	}
+
+	const searchQuery = url.searchParams.get('search') ?? undefined;
+
 	const resourcesQuery = locals.supabase.rpc('get_resources', {
 		tag_ids: undefined,
-		resource_types: undefined
+		resource_types: undefined,
+		search_query: searchQuery
 	});
 
 	const { data, error: resourcesError } = await resourcesQuery;

@@ -1,15 +1,41 @@
 <script lang="ts">
 	import * as InputGroup from '$lib/components/ui/input-group';
+	import ResourceCard from '$lib/components/ResourceCard/ResourceCard.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import { Search } from '@lucide/svelte';
 	import type { PageData } from './$types';
-	import ResourceCard from '$lib/components/ResourceCard/ResourceCard.svelte';
+	import { goto } from '$app/navigation';
+	import { page, navigating } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
-	let resources = $state(data.resources ?? []);
+	let resources = $derived(data.resources ?? []);
 	const currentUserId = $derived(data.session?.user.id ?? '');
 
+	let searchTerm = $state(page.url.searchParams.get('search') ?? '');
+	let timer: NodeJS.Timeout;
+
+	const isLoading = $derived(!!navigating.to);
+
 	const updateResources = (newResources: typeof resources) => (resources = newResources);
+
+	function handleSearch(e: Event) {
+		const value = (e.target as HTMLInputElement).value;
+		searchTerm = value;
+
+		clearTimeout(timer);
+
+		timer = setTimeout(() => {
+			const newUrl = new URL(page.url);
+
+			if (value) {
+				newUrl.searchParams.set('search', value);
+			} else {
+				newUrl.searchParams.delete('search');
+			}
+
+			goto(newUrl, { keepFocus: true, noScroll: true });
+		}, 300);
+	}
 </script>
 
 <div class="my-11">
@@ -21,6 +47,8 @@
 		<InputGroup.Input
 			class="text-slate-400"
 			placeholder="Search resource by title or description..."
+			value={searchTerm}
+			oninput={handleSearch}
 		/>
 		<InputGroup.Addon class="">
 			<Search class="size-6" />
