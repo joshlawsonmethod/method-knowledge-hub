@@ -63,6 +63,9 @@ importers:
       globals:
         specifier: ^16.5.0
         version: 16.5.0
+      mode-watcher:
+        specifier: ^1.1.0
+        version: 1.1.0(svelte@5.45.6)
       prettier:
         specifier: ^3.6.2
         version: 3.7.4
@@ -84,6 +87,9 @@ importers:
       svelte-check:
         specifier: ^4.3.4
         version: 4.3.4(picomatch@4.0.3)(svelte@5.45.6)(typescript@5.9.3)
+      svelte-sonner:
+        specifier: ^1.0.7
+        version: 1.0.7(svelte@5.45.6)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -1317,6 +1323,11 @@ packages:
     resolution: {integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==}
     engines: {node: '>= 18'}
 
+  mode-watcher@1.1.0:
+    resolution: {integrity: sha512-mUT9RRGPDYenk59qJauN1rhsIMKBmWA3xMF+uRwE8MW/tjhaDSCCARqkSuDTq8vr4/2KcAxIGVjACxTjdk5C3g==}
+    peerDependencies:
+      svelte: ^5.27.0
+
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -1551,6 +1562,21 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  runed@0.23.4:
+    resolution: {integrity: sha512-9q8oUiBYeXIDLWNK5DfCWlkL0EW3oGbk845VdKlPeia28l751VpfesaB/+7pI6rnbx1I6rqoZ2fZxptOJLxILA==}
+    peerDependencies:
+      svelte: ^5.7.0
+
+  runed@0.25.0:
+    resolution: {integrity: sha512-7+ma4AG9FT2sWQEA0Egf6mb7PBT2vHyuHail1ie8ropfSjvZGtEAx8YTmUjv/APCsdRRxEVvArNjALk9zFSOrg==}
+    peerDependencies:
+      svelte: ^5.7.0
+
+  runed@0.28.0:
+    resolution: {integrity: sha512-k2xx7RuO9hWcdd9f+8JoBeqWtYrm5CALfgpkg2YDB80ds/QE4w0qqu34A7fqiAwiBBSBQOid7TLxwxVC27ymWQ==}
+    peerDependencies:
+      svelte: ^5.7.0
+
   runed@0.35.1:
     resolution: {integrity: sha512-2F4Q/FZzbeJTFdIS/PuOoPRSm92sA2LhzTnv6FXhCoENb3huf5+fDuNOg1LNvGOouy3u/225qxmuJvcV3IZK5Q==}
     peerDependencies:
@@ -1634,6 +1660,11 @@ packages:
       svelte:
         optional: true
 
+  svelte-sonner@1.0.7:
+    resolution: {integrity: sha512-1EUFYmd7q/xfs2qCHwJzGPh9n5VJ3X6QjBN10fof2vxgy8fYE7kVfZ7uGnd7i6fQaWIr5KvXcwYXE/cmTEjk5A==}
+    peerDependencies:
+      svelte: ^5.0.0
+
   svelte-time@2.0.2:
     resolution: {integrity: sha512-Ne3eG92bxvttZV3lrMfL5/Vs3PSEJiNpPOqpY90rorXBLXsbmdS7HScXZt7mb42mX/eTCRJyAKgyBlgzlcYLrQ==}
 
@@ -1642,6 +1673,12 @@ packages:
     engines: {node: '>=18', pnpm: '>=8.7.0'}
     peerDependencies:
       svelte: ^5.30.2
+
+  svelte-toolbelt@0.7.1:
+    resolution: {integrity: sha512-HcBOcR17Vx9bjaOceUvxkY3nGmbBmCBBbuWLLEWO6jtmWH8f/QoWmbyUfQZrpDINH39en1b8mptfPQT9VKQ1xQ==}
+    engines: {node: '>=18', pnpm: '>=8.7.0'}
+    peerDependencies:
+      svelte: ^5.0.0
 
   svelte@5.45.6:
     resolution: {integrity: sha512-V3aVXthzPyPt1UB1wLEoXnEXpwPsvs7NHrR0xkCor8c11v71VqBj477MClqPZYyrcXrAH21sNGhOj9FJvSwXfQ==}
@@ -2995,6 +3032,12 @@ snapshots:
     dependencies:
       minipass: 7.1.2
 
+  mode-watcher@1.1.0(svelte@5.45.6):
+    dependencies:
+      runed: 0.25.0(svelte@5.45.6)
+      svelte: 5.45.6
+      svelte-toolbelt: 0.7.1(svelte@5.45.6)
+
   mri@1.2.0: {}
 
   mrmime@2.0.1: {}
@@ -3160,6 +3203,21 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.53.3
       fsevents: 2.3.3
 
+  runed@0.23.4(svelte@5.45.6):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.45.6
+
+  runed@0.25.0(svelte@5.45.6):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.45.6
+
+  runed@0.28.0(svelte@5.45.6):
+    dependencies:
+      esm-env: 1.2.2
+      svelte: 5.45.6
+
   runed@0.35.1(@sveltejs/kit@2.49.1(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.45.6)(vite@7.2.7(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)))(svelte@5.45.6)(vite@7.2.7(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.30.2)))(svelte@5.45.6):
     dependencies:
       dequal: 2.0.3
@@ -3253,6 +3311,11 @@ snapshots:
     optionalDependencies:
       svelte: 5.45.6
 
+  svelte-sonner@1.0.7(svelte@5.45.6):
+    dependencies:
+      runed: 0.28.0(svelte@5.45.6)
+      svelte: 5.45.6
+
   svelte-time@2.0.2:
     dependencies:
       dayjs: 1.11.19
@@ -3265,6 +3328,13 @@ snapshots:
       svelte: 5.45.6
     transitivePeerDependencies:
       - '@sveltejs/kit'
+
+  svelte-toolbelt@0.7.1(svelte@5.45.6):
+    dependencies:
+      clsx: 2.1.1
+      runed: 0.23.4(svelte@5.45.6)
+      style-to-object: 1.0.14
+      svelte: 5.45.6
 
   svelte@5.45.6:
     dependencies:

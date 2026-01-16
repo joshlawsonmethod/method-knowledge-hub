@@ -6,6 +6,8 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import Tags from '$lib/components/Tags.svelte';
 	import { drawer } from '$lib/components/Drawer/drawerState.svelte';
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 
 	let resourceType = $state('');
 
@@ -75,7 +77,15 @@
 						class="flex-1"
 						type="button"
 						variant="outline"
-						onclick={() => (drawer.isOpen = false)}>Cancel</Button
+						onclick={() => {
+							drawer.isOpen = false;
+							toast('Resource successfully added', {
+								action: {
+									label: 'View Your Resources',
+									onClick: () => goto('##')
+								}
+							});
+						}}>Cancel</Button
 					>
 					<Button class="flex-1" type="submit">Share</Button>
 				</Field.Field>
