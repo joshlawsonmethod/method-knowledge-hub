@@ -26,7 +26,10 @@
 	<section class="flex items-center gap-4">
 		<Button
 			class="cursor-pointer rounded-lg bg-slate-900 p-2 px-10 pt-2 text-center text-white"
-			onclick={() => (drawer.isOpen = true)}
+			onclick={() => {
+				drawer.isOpen = true;
+				drawer.action = 'create';
+			}}
 		>
 			Share Resource
 		</Button>
@@ -47,7 +50,7 @@
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item>
 						<form method="POST" action="/logout">
-							<button class="flex items-center gap-2" type="button">
+							<button class="flex items-center gap-2" type="submit">
 								<LogOut strokeWidth={2} color="black" /> Logout
 							</button>
 						</form>

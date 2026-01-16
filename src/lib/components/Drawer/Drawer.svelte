@@ -25,12 +25,12 @@
 		>
 			<XIcon />
 		</Button>
-		{#if drawer.action === 'view' && drawer.resource}
+		{#if drawer.action === 'create'}
+			<NewResource />
+		{:else if drawer.action === 'view' && drawer.resource}
 			<ViewResource resource={drawer.resource} />
 		{:else if drawer.action === 'edit' && drawer.resource}
 			<EditResource resource={drawer.resource} />
-		{:else}
-			<NewResource />
 		{/if}
 	</aside>
 {/if}
