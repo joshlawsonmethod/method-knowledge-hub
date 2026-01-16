@@ -87,7 +87,7 @@
 				<button
 					class={cn(
 						badgeVariants({
-							variant: activeBadges.some((badge) => badge.id === tag.id) ? 'outline' : 'secondary'
+							variant: activeBadges.some((badge) => badge.id === tag.id) ? 'default' : 'outline'
 						}),
 						'cursor-pointer'
 					)}
